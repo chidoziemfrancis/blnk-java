@@ -2,7 +2,8 @@
 
 ## Unreleased — Core 0.15.4
 
-Aligns the Java SDK error catalogue with [Blnk Core 0.15.4](https://docs.blnkfinance.com/changelog/blnk-core).
+Aligns the Java SDK error catalogue with [Blnk Core 0.15.4](https://docs.blnkfinance.com/changelog/blnk-core)
+and fills in list endpoints that Core exposes but the SDK did not wrap.
 
 ### Added
 
@@ -18,6 +19,16 @@ Aligns the Java SDK error catalogue with [Blnk Core 0.15.4](https://docs.blnkfin
   - `TXN_VALIDATION_ERROR` (`400`) is now also returned for a split request that
     carries both `sources` and `destinations`.
   - `GEN_CONFLICT` (`409`) is now also returned when a multi-leg refund fails.
+- `ledgers().list()` and `ledgerBalances().list()`, wrapping `GET /ledgers` and
+  `GET /balances`. Both take an optional `ListOptions` with `limit` (at least
+  `1`) and `offset` (at least `0`), sent as query parameters; unset fields fall
+  back to Core's defaults of `10` and `0`. Invalid pagination is rejected
+  client-side with a `400` before any request is made, matching Core's own
+  `GEN_VALIDATION_ERROR` rules.
+- `transactions().list()`, wrapping `GET /transactions`, with the same optional
+  `ListOptions`. Core's default page here is `20`. Core silently falls back to
+  its defaults on invalid pagination for this route; the SDK rejects it with a
+  `400` instead so mistakes are visible.
 
 ### Unchanged
 
