@@ -3,7 +3,7 @@
 ## Unreleased — Core 0.15.4
 
 Aligns the Java SDK error catalogue with [Blnk Core 0.15.4](https://docs.blnkfinance.com/changelog/blnk-core)
-and fills in list endpoints that Core exposes but the SDK did not wrap.
+and fills in list and multi-search endpoints that Core exposes but the SDK did not wrap.
 
 ### Added
 
@@ -29,6 +29,13 @@ and fills in list endpoints that Core exposes but the SDK did not wrap.
   `ListOptions`. Core's default page here is `20`. Core silently falls back to
   its defaults on invalid pagination for this route; the SDK rejects it with a
   `400` instead so mistakes are visible.
+- `search().multiSearch(MultiSearchParams)`, wrapping `POST /multi-search`. Runs
+  several single-collection searches in one round trip; each entry is a
+  `SearchParams` tagged with its collection, and results return in the same
+  order. Core forwards the body straight to Typesense's multi-search, so the
+  wire shape is `{"searches": [{"collection": ..., "q": ..., ...}]}`. Every
+  entry is validated client-side with the same rules as `search()`, and
+  failures name the entry (`searches[1].collection ...`).
 
 ### Unchanged
 
